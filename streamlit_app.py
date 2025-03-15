@@ -81,4 +81,4 @@ st.dataframe(df)
 
 
 var_zahl = rnd.randint(0,100)
-alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, var_zahl)
+alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, 69)
