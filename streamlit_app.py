@@ -15,7 +15,7 @@ CATEGORIES = {
     "Kategorie D": "data/kategorie_d.csv",
     "Kategorie E": "data/kategorie_e.csv",
 }
-GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]  # ⚠ Sicher speichern!
 
 # 📅 Funktion: CSV aus GitHub laden
 def load_data(csv_path):
@@ -71,6 +71,6 @@ if st.button("Antwort absenden"):
     df = pd.concat([df, new_data], ignore_index=True)
     save_data(df, sha, CATEGORIES[kategorie])
 
-# 📊 Ergebnisse anzeigen
-if st.checkbox("Ergebnisse anzeigen"):
-    st.dataframe(df)
+# 📊 Ergebnisse sofort anzeigen
+st.write("### Ergebnisse der gewählten Kategorie:")
+st.dataframe(df)
