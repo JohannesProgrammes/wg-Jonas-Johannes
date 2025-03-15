@@ -7,13 +7,14 @@ from datetime import datetime
 
 # 🛠 GITHUB EINSTELLUNGEN (ANPASSEN)
 GITHUB_USER = "JohannesProgrammes"
-REPO_NAME = "sieger-2025"
+REPO_NAME = "wg-Jonas-Johannes"
 CATEGORIES = {
-    "Sport": "data/sport.csv",
-    "Musik": "data/musik.csv",
-    "Filme": "data/filme.csv",
-    "Bücher": "data/buecher.csv",
-    "Reisen": "data/reisen.csv",
+    "Spülmaschine ausgeräumt": "data/spülmaschine.csv",
+    "Restmüll rausgebracht": "data/restmüll.csv",
+    "Biomüll rausgebracht": "data/biomüll.csv",
+    "Papiermüll rausgebracht": "data/papierlmüll.csv",
+    "Verpackungsmüll rausgebracht": "data/Verpackungsmüll.csv",
+    "Altglas": "data/altglas.csv",
 }
 GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]  # ⚠ Sicher speichern!
 
@@ -53,22 +54,23 @@ def save_data(df, sha, csv_path):
         st.error(f"Fehler beim Speichern: {response.json()}")
 
 # 🌟 Streamlit UI
-st.set_page_config(page_title="📊 Themen-Umfrage 2025", page_icon="📊")
-st.title("📊 Themen-Umfrage 2025")
-st.write("Wähle deinen Namen und ein Thema aus:")
+st.set_page_config(page_title="📊 WG Jonas Johannes", page_icon="📊")
+st.title("📊 WG Eifelstraße 21")
+st.write("Wähle deinen Namen und eine Aktivität aus:")
 
 # 📊 Auswahl der Eingaben
-name = st.selectbox("Wähle deinen Namen", ["Johannes", "Niklas", "Alex", "Maria", "Sophie"])
+name = st.selectbox("Wähle deinen Namen", ["Jonas", "Johannes", "Heinzelmännchen"])
 kategorie = st.selectbox("Wähle ein Thema", list(CATEGORIES.keys()))
 
 # Daten aus GitHub laden
 df, sha = load_data(CATEGORIES[kategorie])
 
-# ✅ Antwort speichern
-now = datetime.now().strftime("%d.%m.%Y, %H:%M Uhr")
-new_data = pd.DataFrame([[now, name]], columns=df.columns)
-df = pd.concat([df, new_data], ignore_index=True)
-save_data(df, sha, CATEGORIES[kategorie])
+# ✅ Antwort speichern nur bei Button-Klick
+if st.button("Aktion eintragen"):
+    now = datetime.now().strftime("%d.%m.%Y, %H:%M Uhr")
+    new_data = pd.DataFrame([[now, name]], columns=df.columns)
+    df = pd.concat([df, new_data], ignore_index=True)
+    save_data(df, sha, CATEGORIES[kategorie])
 
 # 📊 Ergebnisse sofort anzeigen
 st.write(f"### Antworten für das Thema: {kategorie}")
