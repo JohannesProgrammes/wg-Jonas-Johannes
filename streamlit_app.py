@@ -4,6 +4,7 @@ import requests
 import base64
 import json
 from datetime import datetime
+import random as rnd
 
 # 🛠 GITHUB EINSTELLUNGEN (ANPASSEN)
 GITHUB_USER = "JohannesProgrammes"
@@ -54,7 +55,7 @@ def save_data(df, sha, csv_path):
         st.error(f"Fehler beim Speichern: {response.json()}")
 
 # 🌟 Streamlit UI
-st.set_page_config(page_title="📊 JoJoWG", page_icon="📊")
+st.set_page_config(page_title="📊 WG", page_icon="📊")
 st.title("📊 WG Eifelstraße 21")
 st.write("Wähle deinen Namen und eine Aktivität aus:")
 
@@ -74,5 +75,10 @@ if st.button("Aktion eintragen"):
     save_data(df, sha, CATEGORIES[kategorie])
 
 # 📊 Ergebnisse sofort anzeigen
-st.write(f"### Antworten für das Thema: {kategorie}, ah ne doch für Spülmaschine ausgeräumt")
+st.write(f"### Antworten für das Thema Spülmaschine ausgeräumt")
+st.write(f"Die anderen sieht man hier nicht")
 st.dataframe(df)
+
+
+var_zahl = rnd.randint(0,100)
+alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, var_zahl)
