@@ -15,7 +15,7 @@ CATEGORIES = {
     "Kategorie D": "data/kategorie_d.csv",
     "Kategorie E": "data/kategorie_e.csv",
 }
-GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]  # ⚠ Sicher speichern!
+GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
 
 # 📅 Funktion: CSV aus GitHub laden
 def load_data(csv_path):
