@@ -64,6 +64,7 @@ kategorie = st.selectbox("Wähle ein Thema", list(CATEGORIES.keys()))
 
 # Daten aus GitHub laden
 df, sha = load_data(CATEGORIES[kategorie])
+df, sha = load_data("data/spülmaschine.csv")
 
 # ✅ Antwort speichern nur bei Button-Klick
 if st.button("Aktion eintragen"):
