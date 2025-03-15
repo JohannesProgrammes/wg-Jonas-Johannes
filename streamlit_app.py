@@ -54,7 +54,7 @@ def save_data(df, sha, csv_path):
         st.error(f"Fehler beim Speichern: {response.json()}")
 
 # 🌟 Streamlit UI
-st.set_page_config(page_title="📊 WG Jonas Johannes", page_icon="📊")
+st.set_page_config(page_title="📊 JoJoWG", page_icon="📊")
 st.title("📊 WG Eifelstraße 21")
 st.write("Wähle deinen Namen und eine Aktivität aus:")
 
@@ -74,5 +74,5 @@ if st.button("Aktion eintragen"):
     save_data(df, sha, CATEGORIES[kategorie])
 
 # 📊 Ergebnisse sofort anzeigen
-st.write(f"### Antworten für das Thema: {kategorie}")
+st.write(f"### Antworten für das Thema: {kategorie}, ah ne doch für Spülmaschine ausgeräumt")
 st.dataframe(df)
