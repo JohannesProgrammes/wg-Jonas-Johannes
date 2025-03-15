@@ -17,6 +17,9 @@ CATEGORIES = {
     "Papiermüll rausgebracht": "data/papierlmüll.csv",
     "Verpackungsmüll rausgebracht": "data/Verpackungsmüll.csv",
     "Altglas": "data/altglas.csv",
+    "Backofen geputzt": "data/backofen.csv",
+    "Küche gewischt": "data/küche.csv",
+    "Fenster geputzt": "data/fenster.csv",
 }
 GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]  # ⚠ Sicher speichern!
 JOHANNES_TOKEN = st.secrets["JOHANNES_TOKEN"]
@@ -111,14 +114,14 @@ def save_data(df, sha, csv_path):
 
 # 🌟 Streamlit UI
 #st.set_page_config(page_title="📊 WG", page_icon="📊")
-st.title("📊 WG Eifelstraße 21")
+st.title("📊 WG Eifelstraße")
 st.write(f"Hallo {user}!")
 st.write("Wähle deinen Namen und eine Aktivität aus:")
 
 
 # 📊 Auswahl der Eingaben
 name = st.selectbox("Wähle deinen Namen", users)
-kategorie = st.selectbox("Wähle ein Thema", list(CATEGORIES.keys()))
+kategorie = st.selectbox("Wähle eine Aktivität", list(CATEGORIES.keys()))
 
 # Daten aus GitHub laden
 df, sha = load_data(CATEGORIES[kategorie])
@@ -135,6 +138,8 @@ if st.button("Aktion eintragen"):
 st.write(f"### Antworten für das Thema Spülmaschine ausgeräumt")
 st.write(f"Die anderen sieht man hier nicht")
 st.dataframe(df)
+matrix = df.to_numpy()
+print(matrix)
 
 
 var_zahl = rnd.randint(0,100)
