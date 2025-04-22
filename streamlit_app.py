@@ -5,6 +5,8 @@ import base64
 import json
 from datetime import datetime
 import random as rnd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 # 🛠 GITHUB EINSTELLUNGEN (ANPASSEN)
@@ -21,6 +23,8 @@ CATEGORIES = {
     "Küche gewischt": "data/küche.csv",
     "Fenster geputzt": "data/fenster.csv",
 }
+diagramme = ["Spülmaschine ausgeräumt", "Altglas", "Backofen geputzt", "Küche gewischt"]
+DIAGRAMS = {x:CATEGORIES[x] for x in diagramme}
 GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]  # ⚠ Sicher speichern!
 JOHANNES_TOKEN = st.secrets["JOHANNES_TOKEN"]
 JONAS_TOKEN = st.secrets["JONAS_TOKEN"]
@@ -144,3 +148,146 @@ print(matrix)
 
 var_zahl = rnd.randint(0,100)
 alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, 69)
+
+
+st.stop()
+
+
+# Beispiel-Daten für das Balkendiagramm
+personen = ["Johannes", "Jonas"]
+werte = [10, 15]  # Beispielzahlen für die zwei Personen
+
+# Erstelle einen Pandas DataFrame für das Balkendiagramm
+df = pd.DataFrame({
+    'Personen': personen,
+    'Werte': werte
+})
+
+# Horizontale Auswahl für Kategorien
+kategorie = st.radio(
+    "Wähle eine Kategorie",
+    ["Spülmaschine ausgeräumt", "Restmüll rausgebracht", "Biomüll rausgebracht", "Papiermüll rausgebracht", "Altglas"],
+    horizontal=True
+)
+
+# Balkendiagramm erstellen
+st.subheader(f"Balkendiagramm: {kategorie}")
+st.bar_chart(df.set_index('Personen'))
+
+# Weitere Interaktionen, je nach Auswahl
+if kategorie == "Spülmaschine ausgeräumt":
+    st.write("Hier kannst du die Daten zur Spülmaschine sehen...")
+elif kategorie == "Restmüll rausgebracht":
+    st.write("Hier kannst du die Daten zum Restmüll sehen...")
+elif kategorie == "Biomüll rausgebracht":
+    st.write("Hier kannst du die Daten zum Biomüll sehen...")
+elif kategorie == "Papiermüll rausgebracht":
+    st.write("Hier kannst du die Daten zum Papiermüll sehen...")
+else:
+    st.write("Hier kannst du die Daten zum Altglas sehen...")
+
+
+
+
+# Beispiel-Daten für das Balkendiagramm
+personen = ["Johannes", "Jonas"]
+werte = [10, 15]  # Beispielwerte für die zwei Personen
+
+# Erstelle einen Pandas DataFrame für das Balkendiagramm
+df = pd.DataFrame({'Personen': personen, 'Werte': werte})
+
+# 🎨 Seaborn-Theme für schöneres Design
+sns.set_theme(style="whitegrid")
+
+# 📌 Dropdown für Kategorien (anstelle von radio)
+kategorie = st.selectbox(
+    "Wähle eine Kategorie",
+    ["Spülmaschine ausgeräumt", "Restmüll rausgebracht", "Biomüll rausgebracht", "Papiermüll rausgebracht", "Altglas"]
+)
+
+# 🏆 Schöneres Balkendiagramm mit Matplotlib
+st.subheader(f"Balkendiagramm: {kategorie}")
+
+fig, ax = plt.subplots(figsize=(6, 4))
+colors = ["#4CAF50", "#FF9800"]  # Grün & Orange für die Balken
+
+bars = ax.bar(df["Personen"], df["Werte"], color=colors, edgecolor="black", linewidth=1.2)
+
+# 🎨 Runde Ecken für Balken (funktioniert nur mit Patch-Objekten in Matplotlib)
+for bar in bars:
+    bar.set_linewidth(0)  # Entfernt harte Kanten
+    bar.set_alpha(0.9)  # Leichte Transparenz
+    bar.set_capstyle('round')  # Runde Balken-Ecken
+
+# Achsen entfernen für cleanen Look
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.set_xticklabels(df["Personen"], fontsize=12)
+ax.set_yticks([])  # Entfernt Zahlen auf Y-Achse für cleanes Design
+
+st.pyplot(fig)
+
+# 🔍 Extra Infos zur gewählten Kategorie
+st.write(f"Details zur Kategorie **{kategorie}** kommen hier...")
+
+
+
+
+kategorie = st.selectbox("Wähle eine Aktivität", diagramme)
+
+# Beispiel-Daten
+data = pd.DataFrame({
+    "Person": ["Johannes", "Jonas"],
+    "Aktionen": [10, 7]
+}).set_index("Person")
+
+# Balkendiagramm in Streamlit
+st.bar_chart(data)
+
+
+
+
+fig, ax = plt.subplots()
+personen = ["Johannes", "Jonas"]
+werte = [10, 7]
+
+bars = ax.bar(personen, werte, color=["royalblue", "tomato"], edgecolor="black")
+
+# Runde Balken-Ecken simulieren
+for bar in bars:
+    bar.set_linewidth(2)
+    bar.set_alpha(0.9)
+    bar.set_linestyle("solid")
+    bar.set_capstyle("round")  # Macht die Kanten weicher
+
+ax.set_title("💡 Aktionen im Überblick")
+ax.set_ylabel("Anzahl")
+ax.set_ylim(0, max(werte) + 5)
+
+st.pyplot(fig)
+
+
+
+
+def johannes(daten):
+    namen, counts = np.unique(daten[:, 2], return_counts=True)
+    if "Johannes" in namen:
+        return 
+
+    name_counts = dict(zip(namen, counts))
+    print(name_counts, namen, counts)
+    print(name_counts["Johannes"])
+    sorted_counts = dict(sorted(name_counts.items(), key=lambda item: item[1], reverse=True))
+    print(sorted_counts)
+
+
+# Beispiel-Daten
+df = pd.DataFrame({
+    "Johannes": [3, 2, 4],
+    "Jonas": [1, 5, 2]
+}, index=["Kategorie A", "Kategorie B", "Kategorie C"])
+
+# Balkendiagramm
+st.bar_chart(df)
