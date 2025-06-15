@@ -138,24 +138,66 @@ if st.button("Aktion eintragen"):
     df = pd.concat([df, new_data], ignore_index=True)
     save_data(df, sha, CATEGORIES[kategorie])
 
+
+
+
+# Daten initialisieren
+personen = ["Johannes", "Jonas"]
+werte = [0, 0]  # Beispielzahlen für die zwei Personen
+
+# Daten aus GitHub laden
+df, sha = load_data(CATEGORIES[kategorie])
+df, sha = load_data("data/spülmaschine.csv")
+#st.dataframe(df)
+matrix = df.to_numpy()
+for zeile in matrix:
+    if zeile[2] == "Johannes":
+        werte[0] += 1
+    if zeile[2] == "Jonas":
+        werte[1] += 1
+
+
+print(werte)
+if user == "Johannes":
+    if werte[0] > werte[1]:
+        st.write(f"### Jonas muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    elif werte[0] < werte[1]:
+        st.write(f"### Du musst noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    else:
+        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
+elif user == "Jonas":
+    if werte[0] > werte[1]:
+        st.write(f"### Du musst noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    elif werte[0] < werte[1]:
+        st.write(f"### Johannes muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    else:
+        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
+else:
+    if werte[0] > werte[1]:
+        st.write(f"### Jonas muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    elif werte[0] < werte[1]:
+        st.write(f"### Johannes muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+    else:
+        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
+
+
+
+
+
 # 📊 Ergebnisse sofort anzeigen
 st.write(f"### Antworten für das Thema Spülmaschine ausgeräumt")
-st.write(f"Die anderen sieht man hier nicht")
+#st.write(f"Die anderen sieht man hier nicht")
 st.dataframe(df)
 matrix = df.to_numpy()
 print(matrix)
 
 
-var_zahl = rnd.randint(0,100)
-alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, 69)
+# var_zahl = rnd.randint(0,100)
+# alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, 69)
 
 
-st.stop()
+#st.stop()
 
-
-# Beispiel-Daten für das Balkendiagramm
-personen = ["Johannes", "Jonas"]
-werte = [10, 15]  # Beispielzahlen für die zwei Personen
 
 # Erstelle einen Pandas DataFrame für das Balkendiagramm
 df = pd.DataFrame({
@@ -164,15 +206,20 @@ df = pd.DataFrame({
 })
 
 # Horizontale Auswahl für Kategorien
-kategorie = st.radio(
-    "Wähle eine Kategorie",
-    ["Spülmaschine ausgeräumt", "Restmüll rausgebracht", "Biomüll rausgebracht", "Papiermüll rausgebracht", "Altglas"],
-    horizontal=True
-)
+# kategorie = st.radio(
+#     "Wähle eine Kategorie",
+#     ["Spülmaschine ausgeräumt", "Restmüll rausgebracht", "Biomüll rausgebracht", "Papiermüll rausgebracht", "Altglas"],
+#     horizontal=True
+# )
 
 # Balkendiagramm erstellen
 st.subheader(f"Balkendiagramm: {kategorie}")
 st.bar_chart(df.set_index('Personen'))
+
+
+
+st.stop()
+
 
 # Weitere Interaktionen, je nach Auswahl
 if kategorie == "Spülmaschine ausgeräumt":
@@ -186,12 +233,6 @@ elif kategorie == "Papiermüll rausgebracht":
 else:
     st.write("Hier kannst du die Daten zum Altglas sehen...")
 
-
-
-
-# Beispiel-Daten für das Balkendiagramm
-personen = ["Johannes", "Jonas"]
-werte = [10, 15]  # Beispielwerte für die zwei Personen
 
 # Erstelle einen Pandas DataFrame für das Balkendiagramm
 df = pd.DataFrame({'Personen': personen, 'Werte': werte})
