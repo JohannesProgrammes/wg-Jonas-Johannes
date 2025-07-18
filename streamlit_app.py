@@ -160,23 +160,23 @@ for zeile in matrix:
 print(werte)
 if user == "Johannes":
     if werte[0] > werte[1]:
-        st.write(f"### Jonas muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Jonas muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     elif werte[0] < werte[1]:
-        st.write(f"### Du musst noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Du musst noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     else:
         st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
 elif user == "Jonas":
     if werte[0] > werte[1]:
-        st.write(f"### Du musst noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Du musst noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     elif werte[0] < werte[1]:
-        st.write(f"### Johannes muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Johannes muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     else:
         st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
 else:
     if werte[0] > werte[1]:
-        st.write(f"### Jonas muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Jonas muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     elif werte[0] < werte[1]:
-        st.write(f"### Johannes muss noch {werte[0]-werte[1]} mal die Spülmaschine ausräumen")
+        st.write(f"### Johannes muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
     else:
         st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
 
