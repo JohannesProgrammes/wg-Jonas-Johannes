@@ -62,6 +62,20 @@ def check_login():
 
 # Nur anzeigen, wenn nicht eingeloggt
 if not st.session_state["user"]:
+    # JavaScript, um das Username-Feld automatisch zu fokussieren
+    components.html(
+        """
+        <div style="display:none;" tabindex="-1">
+        <script>
+        window.onload = function() {
+        const inputs = window.parent.document.querySelectorAll('input[aria-label="Benutzername"]');
+        if (inputs.length > 0) inputs[0].focus();
+        }
+        </script>
+        </div>
+        """,
+        height=0,
+    )
     st.title("🔐 Login")
 
     with st.form("login_form"):
@@ -72,22 +86,6 @@ if not st.session_state["user"]:
     if submitted:
         st.session_state["auto_login_attempted"] = True
         check_login()
-    # st.text_input("Benutzername", key="username")
-    # st.text_input("Passwort", type="password", key="password")
-
-    # # Manueller Button (optional)
-    # if st.button("Login"):
-    #     st.session_state["auto_login_attempted"] = True
-    #     check_login()
-
-    # # 👇 Automatischer Login, wenn beide Felder gefüllt & noch nicht versucht
-    # if (
-    #     st.session_state["username"]
-    #     and st.session_state["password"]
-    #     and not st.session_state["auto_login_attempted"]
-    # ):
-    #     st.session_state["auto_login_attempted"] = True
-    #     check_login()
 
     st.stop()
 
