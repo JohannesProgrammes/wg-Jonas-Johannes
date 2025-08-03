@@ -64,22 +64,30 @@ def check_login():
 if not st.session_state["user"]:
     st.title("🔐 Login")
 
-    st.text_input("Benutzername", key="username")
-    st.text_input("Passwort", type="password", key="password")
+    with st.form("login_form"):
+        username = st.text_input("Benutzername", key="username")
+        password = st.text_input("Passwort", type="password", key="password")
+        submitted = st.form_submit_button("Login")
 
-    # Manueller Button (optional)
-    if st.button("Login"):
+    if submitted:
         st.session_state["auto_login_attempted"] = True
         check_login()
+    # st.text_input("Benutzername", key="username")
+    # st.text_input("Passwort", type="password", key="password")
 
-    # 👇 Automatischer Login, wenn beide Felder gefüllt & noch nicht versucht
-    if (
-        st.session_state["username"]
-        and st.session_state["password"]
-        and not st.session_state["auto_login_attempted"]
-    ):
-        st.session_state["auto_login_attempted"] = True
-        check_login()
+    # # Manueller Button (optional)
+    # if st.button("Login"):
+    #     st.session_state["auto_login_attempted"] = True
+    #     check_login()
+
+    # # 👇 Automatischer Login, wenn beide Felder gefüllt & noch nicht versucht
+    # if (
+    #     st.session_state["username"]
+    #     and st.session_state["password"]
+    #     and not st.session_state["auto_login_attempted"]
+    # ):
+    #     st.session_state["auto_login_attempted"] = True
+    #     check_login()
 
     st.stop()
 
