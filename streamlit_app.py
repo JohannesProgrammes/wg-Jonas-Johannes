@@ -7,6 +7,8 @@ from datetime import datetime
 import random as rnd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import streamlit.components.v1 as components
+
 
 
 # 🛠 GITHUB EINSTELLUNGEN (ANPASSEN)
@@ -36,33 +38,79 @@ st.set_page_config(page_title="📊 WG", page_icon="📊")
 # 🛠 Erlaubte Nutzer mit Passwörtern
 USERS = {"Johannes": f"{JOHANNES_TOKEN}", "Jonas": f"{JONAS_TOKEN}"}
 
-# 🌐 Session-Status für den eingeloggten Nutzer
+# Initialisierung von Session State
 if "user" not in st.session_state:
     st.session_state["user"] = None
+if "username" not in st.session_state:
+    st.session_state["username"] = ""
+if "password" not in st.session_state:
+    st.session_state["password"] = ""
+if "auto_login_attempted" not in st.session_state:
+    st.session_state["auto_login_attempted"] = False
+
 
 def check_login():
     username = st.session_state["username"]
     password = st.session_state["password"]
-    
     if USERS.get(username) == password:
         st.session_state["user"] = username
         st.success(f"✅ Eingeloggt als {username}")
+        st.rerun()
     else:
         st.error("❌ Falsches Passwort!")
 
-# 🔐 Login-Formular anzeigen, wenn nicht eingeloggt
+
+# Nur anzeigen, wenn nicht eingeloggt
 if not st.session_state["user"]:
-    st.title("🔐 Login erforderlich")
+    st.title("🔐 Login")
 
-    # Benutzername und Passwort als Eingabefelder
-    username = st.text_input("Benutzername", key="username")
-    password = st.text_input("Passwort", type="password", key="password", on_change=check_login)
+    st.text_input("Benutzername", key="username")
+    st.text_input("Passwort", type="password", key="password")
 
-    # Login-Button
+    # Manueller Button (optional)
     if st.button("Login"):
+        st.session_state["auto_login_attempted"] = True
         check_login()
 
-    st.stop()  # 🚫 Stoppt die Ausführung der App, solange kein Login erfolgt ist
+    # 👇 Automatischer Login, wenn beide Felder gefüllt & noch nicht versucht
+    if (
+        st.session_state["username"]
+        and st.session_state["password"]
+        and not st.session_state["auto_login_attempted"]
+    ):
+        st.session_state["auto_login_attempted"] = True
+        check_login()
+
+    st.stop()
+
+
+# # 🌐 Session-Status für den eingeloggten Nutzer
+# if "user" not in st.session_state:
+#     st.session_state["user"] = None
+
+# def check_login():
+#     username = st.session_state["username"]
+#     password = st.session_state["password"]
+    
+#     if USERS.get(username) == password:
+#         st.session_state["user"] = username
+#         st.success(f"✅ Eingeloggt als {username}")
+#     else:
+#         st.error("❌ Falsches Passwort!")
+
+# # 🔐 Login-Formular anzeigen, wenn nicht eingeloggt
+# if not st.session_state["user"]:
+#     st.title("🔐 Login erforderlich")
+
+#     # Benutzername und Passwort als Eingabefelder
+#     username = st.text_input("Benutzername", key="username")
+#     password = st.text_input("Passwort", type="password", key="password", on_change=check_login)
+
+#     # Login-Button
+#     if st.button("Login"):
+#         check_login()
+
+#     st.stop()  # 🚫 Stoppt die Ausführung der App, solange kein Login erfolgt ist
 
 
 
@@ -93,6 +141,7 @@ def load_data(csv_path):
 
 # 📄 Funktion: CSV in GitHub speichern
 def save_data(df, sha, csv_path):
+    df, sha = load_data(CATEGORIES[kategorie])
     url = f"https://api.github.com/repos/{GITHUB_USER}/{REPO_NAME}/contents/{csv_path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
     
