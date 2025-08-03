@@ -8,6 +8,7 @@ import random as rnd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit.components.v1 as components
+import altair as alt
 
 
 
@@ -57,7 +58,7 @@ def check_login():
         st.success(f"✅ Eingeloggt als {username}")
         st.rerun()
     else:
-        st.error("❌ Falsches Passwort!")
+        st.error("❌ Passwort oder Benutzername falsch!")
 
 
 # Nur anzeigen, wenn nicht eingeloggt
@@ -76,7 +77,7 @@ if not st.session_state["user"]:
         """,
         height=0,
     )
-    st.title("🔐 Login")
+    st.title("🔐 Login erforderlich", anchor=False)
 
     with st.form("login_form"):
         username = st.text_input("Benutzername", key="username")
@@ -90,33 +91,7 @@ if not st.session_state["user"]:
     st.stop()
 
 
-# # 🌐 Session-Status für den eingeloggten Nutzer
-# if "user" not in st.session_state:
-#     st.session_state["user"] = None
 
-# def check_login():
-#     username = st.session_state["username"]
-#     password = st.session_state["password"]
-    
-#     if USERS.get(username) == password:
-#         st.session_state["user"] = username
-#         st.success(f"✅ Eingeloggt als {username}")
-#     else:
-#         st.error("❌ Falsches Passwort!")
-
-# # 🔐 Login-Formular anzeigen, wenn nicht eingeloggt
-# if not st.session_state["user"]:
-#     st.title("🔐 Login erforderlich")
-
-#     # Benutzername und Passwort als Eingabefelder
-#     username = st.text_input("Benutzername", key="username")
-#     password = st.text_input("Passwort", type="password", key="password", on_change=check_login)
-
-#     # Login-Button
-#     if st.button("Login"):
-#         check_login()
-
-#     st.stop()  # 🚫 Stoppt die Ausführung der App, solange kein Login erfolgt ist
 
 
 
@@ -147,7 +122,6 @@ def load_data(csv_path):
 
 # 📄 Funktion: CSV in GitHub speichern
 def save_data(df, sha, csv_path):
-    df, sha = load_data(CATEGORIES[kategorie])
     url = f"https://api.github.com/repos/{GITHUB_USER}/{REPO_NAME}/contents/{csv_path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
     
@@ -173,7 +147,7 @@ def save_data(df, sha, csv_path):
 
 # 🌟 Streamlit UI
 #st.set_page_config(page_title="📊 WG", page_icon="📊")
-st.title("📊 WG Eifelstraße")
+st.title("📊 WG Eifelstraße", anchor=False)
 st.write(f"Hallo {user}!")
 st.write("Wähle deinen Namen und eine Aktivität aus:")
 
@@ -184,7 +158,6 @@ kategorie = st.selectbox("Wähle eine Aktivität", list(CATEGORIES.keys()))
 
 # Daten aus GitHub laden
 df, sha = load_data(CATEGORIES[kategorie])
-df, sha = load_data("data/spülmaschine.csv")
 
 # ✅ Antwort speichern nur bei Button-Klick
 if st.button("Aktion eintragen"):
@@ -194,82 +167,109 @@ if st.button("Aktion eintragen"):
     save_data(df, sha, CATEGORIES[kategorie])
 
 
+def auslesen(kategorie):
+    # Daten initialisieren für Spülmaschine
+    personen = ["Johannes", "Jonas"]
+    werte = [0, 0]  # Beispielzahlen für die zwei Personen
+
+    # Daten aus GitHub laden
+    df, sha = load_data(CATEGORIES[kategorie])
+    #st.dataframe(df)
+    matrix = df.to_numpy()
+    for zeile in matrix:
+        if zeile[2] == "Johannes":
+            werte[0] += 1
+        if zeile[2] == "Jonas":
+            werte[1] += 1
+    return personen, werte
 
 
-# Daten initialisieren
-personen = ["Johannes", "Jonas"]
-werte = [0, 0]  # Beispielzahlen für die zwei Personen
-
-# Daten aus GitHub laden
-df, sha = load_data(CATEGORIES[kategorie])
-df, sha = load_data("data/spülmaschine.csv")
-#st.dataframe(df)
-matrix = df.to_numpy()
-for zeile in matrix:
-    if zeile[2] == "Johannes":
-        werte[0] += 1
-    if zeile[2] == "Jonas":
-        werte[1] += 1
-
-
-print(werte)
-if user == "Johannes":
-    if werte[0] > werte[1]:
-        st.write(f"### Jonas muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    elif werte[0] < werte[1]:
-        st.write(f"### Du musst noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    else:
-        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
-elif user == "Jonas":
-    if werte[0] > werte[1]:
-        st.write(f"### Du musst noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    elif werte[0] < werte[1]:
-        st.write(f"### Johannes muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    else:
-        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
+# Wer muss ausräumen?
+personen, werte = auslesen("Spülmaschine ausgeräumt")
+ausräumen = abs(werte[0] - werte[1])
+if ausräumen == 0:
+    st.subheader(f"Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand", anchor=False)
+elif user != personen[werte.index(max(werte))]:
+    st.subheader(f"Du musst noch {ausräumen} mal die Spülmaschine ausräumen", anchor=False)
 else:
-    if werte[0] > werte[1]:
-        st.write(f"### Jonas muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    elif werte[0] < werte[1]:
-        st.write(f"### Johannes muss noch {abs(werte[0]-werte[1])} mal die Spülmaschine ausräumen")
-    else:
-        st.write(f"### Jeder muss die Spülmaschine ausräumen, denn es ist Gleichstand")
+    st.subheader(f"{personen[werte.index(min(werte))]} muss noch {ausräumen} mal die Spülmaschine ausräumen", anchor=False)
 
 
 
+
+st.write("")
+
+# Auswahl für Kategorien
+möglichkeiten = ["Spülmaschine ausgeräumt", "Altglas"]
+kategorie = st.pills(
+    "Wähle eine Kategorie",
+    möglichkeiten,
+    selection_mode="single",
+    key="kategorie",
+    label_visibility="hidden",
+    default=möglichkeiten[0]
+)
+if kategorie == None:
+    kategorie = möglichkeiten[0]
+df, sha = load_data(CATEGORIES[kategorie])
 
 
 # 📊 Ergebnisse sofort anzeigen
-st.write(f"### Antworten für das Thema Spülmaschine ausgeräumt")
-#st.write(f"Die anderen sieht man hier nicht")
+st.subheader(f"Antworten für das Thema {kategorie} ausgeräumt", anchor=False)
 st.dataframe(df)
 matrix = df.to_numpy()
-print(matrix)
+# print(matrix)
 
 
 # var_zahl = rnd.randint(0,100)
 # alter = st.slider("Hier ein Slider zum rumspielen", 0, 100, 69)
 
 
-#st.stop()
-
-
+personen, werte = auslesen(kategorie)
 # Erstelle einen Pandas DataFrame für das Balkendiagramm
 df = pd.DataFrame({
     'Personen': personen,
     'Werte': werte
 })
+# Überschrift
+st.subheader(f"{kategorie}", anchor=False)
+# 🎨 Balkendiagramm gestalten
+# Basis-Balkendiagramm
+bars = alt.Chart(df).mark_bar(
+    cornerRadiusTopLeft=20,
+    cornerRadiusTopRight=20
+).encode(
+    x=alt.X('Personen:N', title=None, axis=alt.Axis(labelAngle=0, labelFontSize=13)),
+    y=alt.Y('Werte:Q', title="Anzahl", axis=alt.Axis(labelFontSize=13)),
+    color=alt.Color('Personen:N', legend=None, scale=alt.Scale(scheme='category10')),
+    tooltip=[
+        alt.Tooltip('Personen:N', title="Person"),
+        alt.Tooltip('Werte:Q', title="Wert")
+    ]
+)
 
-# Horizontale Auswahl für Kategorien
-# kategorie = st.radio(
-#     "Wähle eine Kategorie",
-#     ["Spülmaschine ausgeräumt", "Restmüll rausgebracht", "Biomüll rausgebracht", "Papiermüll rausgebracht", "Altglas"],
-#     horizontal=True
-# )
+# Text-Labels über den Balken
+labels = alt.Chart(df).mark_text(
+    align='center',
+    baseline='bottom',
+    dy=-10,  # Abstand nach oben
+    fontSize=14,
+    fontWeight='bold'
+).encode(
+    x='Personen:N',
+    y='Werte:Q',
+    text='Werte:Q'
+)
 
-# Balkendiagramm erstellen
-st.subheader(f"Balkendiagramm: {kategorie}")
-st.bar_chart(df.set_index('Personen'))
+# Kombiniertes Chart
+chart = (bars + labels).properties(
+    width='container',
+    height=350
+).configure_view(
+    strokeWidth=0
+)
+
+st.altair_chart(chart, use_container_width=True)
 
 
 
@@ -278,7 +278,7 @@ st.stop()
 
 # Weitere Interaktionen, je nach Auswahl
 if kategorie == "Spülmaschine ausgeräumt":
-    st.write("Hier kannst du die Daten zur Spülmaschine sehen...")
+    st.write("Hier kannst du die Daten zur Spülmaschine sehen...", anchor=False)
 elif kategorie == "Restmüll rausgebracht":
     st.write("Hier kannst du die Daten zum Restmüll sehen...")
 elif kategorie == "Biomüll rausgebracht":
@@ -302,7 +302,7 @@ kategorie = st.selectbox(
 )
 
 # 🏆 Schöneres Balkendiagramm mit Matplotlib
-st.subheader(f"Balkendiagramm: {kategorie}")
+st.subheader(f"Balkendiagramm: {kategorie}", anchor=False)
 
 fig, ax = plt.subplots(figsize=(6, 4))
 colors = ["#4CAF50", "#FF9800"]  # Grün & Orange für die Balken
